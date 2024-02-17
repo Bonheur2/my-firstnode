@@ -1,8 +1,21 @@
 const http = require('http');
-const fs = require('fs')
+const fs = require('fs');
+const _ = require('lodash');
 
 const server = http.createServer((req, res) => {
-    console.log(req.url, req.method);
+    // console.log(req.url, req.method);
+
+    // lodash
+
+    const num = _.random(0, 20);
+    console.log(num);
+
+    const greet = (() => {
+        console.log('hello');
+    });
+    greet();
+    
+   
 
     // set header content type
 
@@ -24,10 +37,10 @@ const server = http.createServer((req, res) => {
             res.statusCode = 200;
             break;
         // about-me it will direct me to about page
-        case '/about-me':
+        case '/about-us':
+            res.statusCode = 301;
             res.setHeader('location', '/about');
             res.end();
-            res.statusCode = 301;
             break;
         default:
             path += '404.html';
