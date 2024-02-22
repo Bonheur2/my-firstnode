@@ -18,8 +18,7 @@ const blogschema = new schema({
 
 
 // modal for our schema
-const Blog = mongoose.
-model('Blog', blogschema);
+const Blog = mongoose.model('Blog', blogschema);
 module.exports = Blog;
 
 
