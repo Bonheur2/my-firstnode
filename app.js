@@ -34,6 +34,7 @@ app.set('view engine', 'ejs');
 
 // middleware and static files
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'));
 
 // app.get('/add-blog', (req, res) => {
@@ -93,22 +94,36 @@ app.get('/', (req, res) => {
     //         { title: 'Rukwaya finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur' },
     //         { title: 'How to defeat browser', snippet: 'Lorem ipsum dolor sit amet consectetur' }
     //     ]
-        res.redirect('/blogs');
+    res.redirect('/blogs');
 });
 
-    app.get('/blogs', (req, res) => {
-        Blog.find().sort({createdAt: -1})
+app.get('/blogs', (req, res) => {
+    Blog.find().sort({ createdAt: -1 })
         .then((result) => {
-            res.render('index', {title: 'All blogs', blogs: result})
+            res.render('index', { title: 'All blogs', blogs: result })
         })
-        .catch((err)=> {
+        .catch((err) => {
             console.log(err)
         })
-    })
+})
 
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About' });
 });
+
+
+// post
+
+app.post('/blogs', (req, res) => {
+    const blog = new Blog(req.body)
+    blog.save()
+        .then((result) => {
+            res.redirect('/blogs')
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+})
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create new a blog' });
