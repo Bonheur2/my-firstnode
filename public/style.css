@@ -61,7 +61,15 @@ h3 {
 .content {
     margin: 0 20%;
 }
-
+.blog a{
+display: block;
+margin: 40px 0;
+padding-left: 30px;
+border-left: 6px solid crimson;
+}
+.blog a:hover h3{
+    color: crimson;
+}
 .create-blog input,
 .create-blog textarea {
     display: block;

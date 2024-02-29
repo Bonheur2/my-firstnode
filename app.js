@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Blog = require('./models/blogs.js');
 const { result } = require('lodash');
+const { render } = require('ejs');
 
 // express app
 const app = express();
@@ -14,7 +15,7 @@ mongoose.connect(dbURI)
     .then((result) => {
         console.log('Connection to database made successfully');
         // Start listening for requests only after the database connection is successful
-        app.listen(3000);
+        app.listen(3003);
     })
     .catch((error) => {
         console.log(error);
@@ -113,23 +114,44 @@ app.get('/about', (req, res) => {
 
 
 // post
-
+// post
 app.post('/blogs', (req, res) => {
-    const blog = new Blog(req.body)
+    const blog = new Blog(req.body);
     blog.save()
         .then((result) => {
-            res.redirect('/blogs')
+            res.redirect('/blogs');
+        })
+        .catch((err) => {
+            console.error(err); 
+            res.status(500).render('error', { title: 'Error' }); 
+        });
+});
+
+
+// single blog
+app.get('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    Blog.findById(id)
+        .then((result) => {
+            if (result) {
+                res.render('details', { blog: result, title: 'Blog details' });
+            } else {
+                res.status(404).render('404', { title: 'Blog not found' });
+            }
         })
         .catch((err) => {
             console.log(err);
-        })
-})
+            res.status(500).render('error', { title: '500 - Internal Server Error' });
+        });
+});
+
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create new a blog' });
 });
 
+
 // 404 page
 app.use((req, res) => {
-    res.status(404).render('404', { title: '404' });
+    res.status(404).render('404', { title: '404 Not Found' });
 });
