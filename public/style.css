@@ -7,7 +7,12 @@ body {
     font-family: Noto Serif, serif;
 }
 
-p, h1, h2, h3, a, ul {
+p,
+h1,
+h2,
+h3,
+a,
+ul {
     margin: 0;
     padding: 0;
     text-decoration: none;
@@ -61,14 +66,36 @@ h3 {
 .content {
     margin: 0 20%;
 }
-.blog a{
-display: block;
-margin: 40px 0;
-padding-left: 30px;
-border-left: 6px solid crimson;
+
+.blog a {
+    display: block;
+    margin: 40px 0;
+    padding-left: 30px;
+    border-left: 6px solid crimson;
 }
-.blog a:hover h3{
+
+.blog a:hover h3 {
     color: crimson;
+}
+
+.details {
+    position: absolute;
+}
+
+.delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    padding: 8px;
+}
+.delete:hover{
+    cursor: pointer;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, o.2);
+}
+.create-blog form{
+    max-width: 400px;
+    margin: 0 auto;
 }
 .create-blog input,
 .create-blog textarea {

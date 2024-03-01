@@ -145,6 +145,19 @@ app.get('/blogs/:id', (req, res) => {
         });
 });
 
+// delete blog
+app.delete('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    Blog.findByIdAndDelete(id)
+        .then((result) => {
+                res.json({redirect: '/blogs'})
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).render('error', { title: '500 - Internal Server Error' });
+        });
+});
+
 
 app.get('/blogs/create', (req, res) => {
     res.render('create', { title: 'Create new a blog' });
