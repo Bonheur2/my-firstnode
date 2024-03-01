@@ -1,9 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const Blog = require('./models/blogs.js');
 const { result } = require('lodash');
 const { render } = require('ejs');
+const path = require('path')
+const blogRouter = require('./router/blogRouter.js')
 
 // express app
 const app = express();
@@ -23,6 +24,7 @@ mongoose.connect(dbURI)
 
 // register view engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // middleware
 // app.use((req, res, next) => {
@@ -31,6 +33,8 @@ app.set('view engine', 'ejs');
 //     console.log('path', req.path);
 //     console.log('method', req.method);
 //     next();
+// console.error(error.stack);
+// res.status(500).render('error', {title: '500 - Internal Server Errors'})
 // });
 
 // middleware and static files
@@ -97,71 +101,12 @@ app.get('/', (req, res) => {
     //     ]
     res.redirect('/blogs');
 });
-
-app.get('/blogs', (req, res) => {
-    Blog.find().sort({ createdAt: -1 })
-        .then((result) => {
-            res.render('index', { title: 'All blogs', blogs: result })
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
-
 app.get('/about', (req, res) => {
-    res.render('about', { title: 'About' });
+    res.render('blogs/about', { title: 'About' });
 });
 
-
-// post
-// post
-app.post('/blogs', (req, res) => {
-    const blog = new Blog(req.body);
-    blog.save()
-        .then((result) => {
-            res.redirect('/blogs');
-        })
-        .catch((err) => {
-            console.error(err); 
-            res.status(500).render('error', { title: 'Error' }); 
-        });
-});
-
-
-// single blog
-app.get('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-    Blog.findById(id)
-        .then((result) => {
-            if (result) {
-                res.render('details', { blog: result, title: 'Blog details' });
-            } else {
-                res.status(404).render('404', { title: 'Blog not found' });
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).render('error', { title: '500 - Internal Server Error' });
-        });
-});
-
-// delete blog
-app.delete('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-    Blog.findByIdAndDelete(id)
-        .then((result) => {
-                res.json({redirect: '/blogs'})
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).render('error', { title: '500 - Internal Server Error' });
-        });
-});
-
-
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: 'Create new a blog' });
-});
+// blog routes
+app.use('/blogs', blogRouter);
 
 
 // 404 page
